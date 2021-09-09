@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import css from './form.module.css';
 
 export class Form extends Component {
   state = {
@@ -12,6 +13,7 @@ export class Form extends Component {
   onFormSubmit = e => {
     e.preventDefault();
     this.props.onSubmit(this.state);
+
     this.reset();
   };
   reset = () => {
@@ -20,9 +22,9 @@ export class Form extends Component {
 
   render() {
     return (
-      <form onSubmit={this.onFormSubmit}>
-        <label>
-          Name
+      <form onSubmit={this.onFormSubmit} className={css.form}>
+        <label className={css.labelField}>
+          <span className={css.label}>Name</span>
           <input
             type="text"
             name="name"
@@ -31,10 +33,11 @@ export class Form extends Component {
             title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
             required
             onChange={this.onChange}
+            className={css.input}
           />
         </label>
-        <label>
-          Number
+        <label className={css.labelField}>
+          <span className={css.label}>Number</span>
           <input
             type="tel"
             name="number"
@@ -43,9 +46,12 @@ export class Form extends Component {
             title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
             required
             onChange={this.onChange}
+            className={css.input}
           />
         </label>
-        <button type="submit">Add contact</button>
+        <button type="submit" className={css.formBtn}>
+          Add contact
+        </button>
       </form>
     );
   }

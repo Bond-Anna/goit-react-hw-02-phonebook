@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Form } from './components/form/form';
+import { Filter } from './components/filter/filter';
 import { ContactList } from './components/contacts/contactList';
 
 export class App extends Component {
@@ -10,6 +11,7 @@ export class App extends Component {
       { name: 'Hermione Kline', id: uuidv4(), number: '443-89-12' },
       { name: 'Eden Clements', id: uuidv4(), number: '645-17-79' },
     ],
+    filter: '',
   };
   addContact = ({ name, number }) => {
     const contact = {
@@ -17,9 +19,28 @@ export class App extends Component {
       number,
       id: uuidv4(),
     };
-    this.setState(prevState => ({
-      contacts: [contact, ...prevState.contacts],
-    }));
+    if (
+      this.state.contacts.find(
+        cont => cont.name.toLowerCase() === contact.name.toLowerCase()
+      )
+    ) {
+      window.alert(`${contact.name} is already in contacts`);
+      return;
+    } else
+      this.setState(prevState => ({
+        contacts: [contact, ...prevState.contacts],
+      }));
+  };
+
+  onFilterChange = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  filter = () => {
+    const { contacts, filter } = this.state;
+    const lowFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(lowFilter)
+    );
   };
 
   deleteContact = contactId => {
@@ -29,13 +50,15 @@ export class App extends Component {
   };
 
   render() {
+    const filtredContacts = this.filter();
     return (
       <div className="App">
-        <h2>Phonebook</h2>
+        <h1 className="title">Phonebook</h1>
         <Form onSubmit={this.addContact} />
-        <h2>Contacts</h2>
+        <h2 className="title">Contacts</h2>
+        <Filter value={this.state.filter} onChange={this.onFilterChange} />
         <ContactList
-          contacts={this.state.contacts}
+          contacts={filtredContacts}
           onDeleteBtn={this.deleteContact}
         />
       </div>
